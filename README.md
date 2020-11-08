@@ -2,8 +2,9 @@
 
 ## Introduction
 
+<p style="text-align:justify;">
 Ce dépôt GitHub regroupe des éléments de recherche gravitant autour de la problématique suivante :
-### ***" Prédiction de la note d'un film à partir de ses principales caractéristiques "***
+<center>### ***" Prédiction de la note d'un film à partir de ses principales caractéristiques "***</center>
 
 L'objectif fut de construire un modèle de Machine Learning visant à prédire la note moyenne (spectateurs) qu'obtiendrait un film selon ses principales caractéristiques : genres principaux, durée, année de sortie, réalisateur, casting...
 
@@ -20,10 +21,18 @@ Sur la base de données de l'IMDB (Interantional Movie Data Base). Grâce au tr�
 
  Une fois sur la page d'accueil, il est possible d'effectuer une recherche personnalisée de films, comme sur l'image qui suit : 
 
-<img src= "images/image_1.png" width = "200"/>
+<p align="center">
+  <img src= "images/image_1.png" width = "800"/>
+</p>
+
 
 Nos seuls critères furent d'exclure les autres catégories hors "films" à proporement parler (séries, émissions tv,..) et d'inclure les films comportant une limite d'âge. Nous obtenons ainsi une liste de près de 450 000 films. Cette liste est fractionnée en plusieures pages (250 films par page soit N = 450 000/250 = 1800 pages environ). Voici l'une de ces pages :
 
-<img src="images/image_2.png" width = "200"/>
+<p align="center">
+  <img src="images/image_2.png" width = "800"/>
+</p>
+
 
 Il est facilement observable que toutes les informations convoitées sont visibles sur la page. Il ne restait donc plus qu'à web scraper ces éléments, puis répéter la collecte sur toutes les pages qui constituent la liste (crawling).
+
+</p>
