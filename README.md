@@ -63,5 +63,4 @@ Par conséquent, le modèle le plus adapté à notre situation serait le SGD Reg
 https://scikit-learn.org/stable/modules/sgd.html#regression
 
 
-
 </p>
