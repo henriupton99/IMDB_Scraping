@@ -45,13 +45,23 @@ Une fois les données collectées, elles furent nettoyées via l'application de 
 
 Toutes les étapes de la constitution de la base sont disponibles sur le Notebook **scraping_cleaning.iynb**
 
-- *Quels modèles pour la modélisation ?*
+- *Quels modèles pour la phase de modélisation ?*
 
 On peut s'aider de la carte des algorithmes de scikit learn :
+https://scikit-learn.org/stable/tutorial/machine_learning_map/index.html
 
 <p align="center">
   <img src="images/ml_map.png" width = "1000"/>
 </p>
+
+Nous cherchons dans notre cas à prédire la note spectateur qu'obtiendrait un film selon certaines de ses caratéristiques : la prédiction porte ainsi sur une quantité. 
+
+D'autre part, notre jeu de données récoltées comporte un nombre très conséquent de données (plus de 400 000 observations). 
+
+Par conséquent, le modèle le plus adapté à notre situation serait le SGD Regressor :
+
+https://scikit-learn.org/stable/modules/sgd.html#regression
+
 
 
 </p>
