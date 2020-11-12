@@ -50,7 +50,7 @@ Toutes les étapes de la constitution de la base sont disponibles sur le Noteboo
 On peut s'aider de la carte des algorithmes de scikit learn :
 
 <p align="center">
-  <img src="images/ml_map.png" width = "600"/>
+  <img src="images/ml_map.png" width = "1000"/>
 </p>
 
 
