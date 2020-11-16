@@ -16,26 +16,27 @@ from urllib import request
 
 
 ##############################################################################################################
-# Codage des différentes fonctions requises dans le notebook consacré à la récolte des données
-# Stockage de toutes ces fonctions dans la classe imdb_scraping qui sera importée dans le notebook de visualisation
+# Codage des différentes fonctions requises dans le notebook consacré à la récolte des données d'IMDb
+# Stockage de toutes ces fonctions dans la classe imdb_scraping qui sera importée dans le notebook
 ##############################################################################################################
 
 class imdb_scraping :
-    # CLASSE imdb_scraping : différentes fonctions requises dans le notebook consacré à la récolte des données
-    
     
     
     @classmethod
     def init_results(cls):
-        # Boucle init_results
-        # Retourne des listes vides (une pour chaque variable) qui permettront de stocker les résultats du scraping 
-        
-        # Initialisation de la liste des variables que l'on souhaite scrapper :
+        """Initialisation du dictionnaire des listes vides (une pour chaque variable) qui stockeront les résultats du scraping 
+
+        Returns:
+            results (dict): dictionnaire de listes vides
+        """ 
+
+        # Liste des variables que l'on souhaite scraper
         list_args = [
             'tconst', 'title', 'year', 'runtime', 'genres', 'metascore', 'rate',
             'votes', 'certificate', 'director', 'casting']
         
-        # Initialisation de results un dictionnaire qui stockera toutes les listes vides pour chaque variable :
+        # Initialisation du dictionnaire de listes vides
         results = {}
         for arg in list_args:
             results[arg] = list()
@@ -46,18 +47,24 @@ class imdb_scraping :
 
     @classmethod
     def fill_results(cls, n, list_url, dict_results) :
-    # Fonction fill_results
-    # Prend en argument n le nombre d'itérations de la boucle de scraping (nombre de pages à scraper)
-    # Prend en argument list_url une liste dans lequel figure l'url de la première page à scraper
-    # Prend en argument dict_results le dictionnaire des listes vides initialisées par la fonction init_results
+        """Scraping et stockage des données récoltées
+
+        Args:
+            n (int): nombre d'itérations de la boucle de scraping (nombre de pages à scraper)
+            list_url (list): liste dans lequel . Son dernière élément est la première page à scraper
+            dict_results (dict): dictionnaire des listes vides initialisées par la fonction init_results
+
+        Returns:
+            df (pandas.core.frame.DataFrame): dataframe générée à partir de dict_results une fois celui-ci rempli
+        """
         
         # Lancement de la grande boucle de web scraping :
         for i in range(n): 
         
-            url = list_url[-1]     # Si il s'agit du premier scraping, on prend l'url défini plus haut,  
+            url = list_url[-1]     # S'il s'agit du premier scraping, on prend l'url défini plus haut,
                                    # Sinon on prend l'url récupéré sur la dernière page scrapée
 
-            # Etape de récupération du code source :
+            # Récupération du code source :
             req = urllib.request.Request(url, headers = {'User-Agent' : 'Mozilla/5.0'})
             request_text = request.urlopen(req).read()
 
@@ -67,11 +74,11 @@ class imdb_scraping :
 
             # Dans l'architecture du code source, toutes les informations qu'on veut receuillir 
             # pour un seul film sont contenues dans une division ayant la classe "lister-item mode-advanced"
-            # Donc on récolte toutes ces divisions pour pouvoir ensuite aller récolter pour tous les films de 
+            # On cherche donc toutes ces divisions pour pouvoir ensuite aller récolter pour tous les films de 
             # la page concernée :
             divisions = page.findAll('div', {'class' : 'lister-item mode-advanced'})
 
-            # On boucle pour tous les films de la page :
+            # Boucle sur tous les films de la page :
             for division in divisions :
                 
                 # Récolte du titre du film :
@@ -114,7 +121,7 @@ class imdb_scraping :
                 casting = [acteur.text for acteur in division.find_all('p',class_ ='')[0].find_all('a')[1:]]
                 dict_results['casting'].append(casting)
 
-                # Récolte du tconst du film (identifiant du film) et stockage dans le tableau tconst :
+                # Récolte du tconst du film (identifiant du film) :
                 txt = str(division.h3.a)
                 expression = re.compile("tt\\d+")        
                 tconst = expression.findall(txt)
@@ -125,6 +132,7 @@ class imdb_scraping :
             list_url.append(next_url)
             print("nombre de pages scrappées :" + str(i+1), end = "\r")
 
+        # Conversion en dataframe
         df = pd.DataFrame.from_dict(dict_results)
 
         return df
@@ -133,31 +141,34 @@ class imdb_scraping :
     
     
     
-    
 ##############################################################################################################
 # Codage des différentes fonctions requises dans le notebook consacré au nettoyage des données
-# Stockage de toutes ces fonctions dans la classe movies_cleaning qui sera importée dans le notebook de visualisation
+# Stockage de toutes ces fonctions dans la classe imdb_cleaning qui sera importée dans le notebook
 ##############################################################################################################
 
-class movies_cleaning :
-    # CLASSE movies_cleaning : différentes fonctions requises dans le notebook consacré au nettoyage des données :
+class imdb_cleaning :
     
     @classmethod
     def regex_clean(cls, elem, expr):
-    # Fonction regex_clean
-    # Prend en argument elem un élément (string) sur lequel appliquer une expression régulière
-    # Prend en argument expr une expression régulière
-    # Retourne l'expression régulière res trouvée dans elem l'élément
-    
+        """Applique une expression régulière à un élément
+
+        Args:
+            elem (string): élément à nettoyer
+            expr (re.Pattern): expression régulière
+
+        Returns:
+            res (string): expression régulière trouvée dans elem
+        """
+
         # On compile l'expression régulière donnée en entrée :
         expression = re.compile(expr)
     
         # On essaye de trouver une expression régulière dans elem : 
         try :
-            res = expression.findall(elem)[0] # Si on trouve, le résultat prend la valeur de l'expression régulière
+            res = expression.findall(elem)[0]
         except :
-            res = 'NaN' # Sinon il s'agit d'une valeur manquante donc res prend la valeur "NaN"
-        
+            res = 'NaN' # Si valeur manquante
+            
         return res
 
 
@@ -165,27 +176,34 @@ class movies_cleaning :
 
     @classmethod
     def data_cleaning(cls, df):
-        # Prend en argument df la base de données des films à nettoyer
-        # Retourne la base de données dont les variables sont nettoyées
+        """Nettoie la base de données issue du scraping
+
+        Args: 
+            df (pandas.core.frame.DataFrame): base de données des films à nettoyer
+
+        Returns:
+            df_cleaned (pandas.core.frame.DataFrame): dataframe nettoyée
+        """
     
         # On modifie les options de pandas pour permettre de modifier le type des variables :
         pd.options.mode.chained_assignment = None 
     
-        # On convertit les variables à nettoyer sous le format string pour permettre d'appliquer la fonction regex_clean :
+        # Conversion des variables à nettoyer au format string pour permettre d'appliquer la fonction regex_clean :
         df["year"] = df["year"].astype(str)
         df["runtime"] = df["runtime"].astype(str)
         df["genres"] = df["genres"].astype(str)
     
-        # On nettoie les données en appliquant la fonction regex_clean :
-        df["tconst"] = df["tconst"].apply(lambda x: regex_clean(x, "tt\d+"))
-        df["year"] = df["year"].apply(lambda x : regex_clean(x, "\d{4}"))
-        df["runtime"] = df["runtime"].apply(lambda x : regex_clean(x,"\d{1,4}"))
+        # Nettoyage des données via la fonction regex_clean :
+        df["tconst"] = df["tconst"].apply(lambda x: cls.regex_clean(x, "tt\\d+"))
+        df["year"] = df["year"].apply(lambda x : cls.regex_clean(x, "\\d{4}"))
+        df["runtime"] = df["runtime"].apply(lambda x : cls.regex_clean(x,"\\d{1,4}"))
+        df["genres"] = df["genres"].apply(lambda x : x.replace("\n",""))   #déjà clean dans la nouvelle version
     
         # On neutralise les valeurs manquantes dans nos variables d'intérêt :
         df_cleaned = df[df['rate'].notnull() & (df["runtime"] != "NaN") & (df["year"] != "NaN") & (df["genres"] != "nan")]
     
-        # On supprime les colonnes du metascore et certificate qui après analyse ont trop de valeurs manquantes :
-        df_cleaned = df_cleaned.drop(columns=["metascore","certificate"], inplace = True)
+        # Suppression des colonnes du metascore et certificate qui, après analyse, ont trop de valeurs manquantes :
+        df_cleaned = df_cleaned.drop(columns=["metascore","certificate"])
     
         # Réindexation de la base df_cleaned :
         df_cleaned = df_cleaned.reset_index(drop=True)
