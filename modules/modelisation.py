@@ -78,5 +78,28 @@ class preprocessing_data:
         # df = df.drop(['index'])
     
         return df
+    
+    
+    
+    @classmethod
+    def add_scores_acteurs(cls,df):
+        # Fonction add_score_acteurs
+        # Prend en argument une base de données df qui contient la note, le rank, et le nombre de votes
+        # Retourne df avec une colonne supplémentaire : le score des acteurs (selon la formule expliquée dans le notebook)
+        
+        
+        # On fait la somme des scores des films selon chaque acteur :
+        list_sum_scores = df.groupby(["casting"])["score_film"].sum().sort_values(ascending = False)
+        # Transformation en pandas dataframe de deux colonnes : le nom de l'acteur et son score
+        list_sum_scores = list_sum_scores.to_frame().reset_index()
+        
+        # Dans list_sum_scores, la colonne "score_film" est en fait la somme des scores des films groupés par acteur, donc finalement le score de chaque acteur. Donc on rename :
+        list_sum_scores = list_sum_scores.rename(columns={'score_film': 'score_acteur'})
+        
+        # On peut finalement faire une jointure avec la base df pour ajouter sur df la colonne du score de l'acteur :
+        df = pd.merge(df,list_sum_scores, on = ["casting"])
+        # df = df.drop(['index'])
+    
+        return df
 
     

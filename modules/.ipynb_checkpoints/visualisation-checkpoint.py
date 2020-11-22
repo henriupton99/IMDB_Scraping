@@ -11,6 +11,30 @@ import seaborn as sns
 # Stockage de toutes ces fonctions dans la classe movie_viz qui sera importée dans le notebook de visualisation
 ##############################################################################################################
 
+class split_method:
+    # Classe pour la méthode de split des valeurs d'une colonne :
+    
+    @classmethod
+    def split_elem_col(cls, data, col_name):
+    # Fonction split_elem_col
+    # Prend en argument data un dataframe
+    # Prend en argument col_name le nom de la colonne ou l'on souhaite split les données
+    # Retourne un dataframe sur lesquels les éléments de la colonne concernée sont split
+        
+        
+        s = data[col_name].str.split(',').apply(pd.Series, 1).stack()
+        s.index = s.index.droplevel(-1)
+        s.name = col_name
+        del data[col_name]
+        df_res = data.join(s)
+        
+        return df_res
+
+
+
+
+
+
 class movies_viz:
     # CLASSE movie_viz : différentes fonctions requises dans le notebook consacré à la visualisation des données
     
