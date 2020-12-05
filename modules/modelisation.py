@@ -1,5 +1,3 @@
-# importation des modules requis ppur le codage des fonctions : 
-
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -32,7 +30,6 @@ class preprocessing_data:
     
     @classmethod
     def add_ranks_films(cls,df):
-        # Fonction add_rank_film
         # Prend en argument une base de données df
         # Retourne df avec une colonne supplémentaire : le classement de chaque film selon sa note (rate)
         
@@ -58,7 +55,6 @@ class preprocessing_data:
     
     @classmethod
     def add_scores_realisateurs(cls,df):
-        # Fonction add_score_realisateur
         # Prend en argument une base de données df qui contient la note, le rank, et le nombre de votes
         # Retourne df avec une colonne supplémentaire : le score du réalisateur (selon la formule expliquée dans le notebook)
         
@@ -70,7 +66,8 @@ class preprocessing_data:
         # Transformation en pandas dataframe de deux colonnes : le nom du réalisateur et son score
         list_sum_scores = list_sum_scores.to_frame().reset_index()
         
-        # Dans list_sum_scores, la colonne "score_film" est en fait la somme des scores des films groupés par réalisateur, donc finalement le score de chaque réalisateur. Donc on rename :
+        # Dans list_sum_scores, la colonne "score_film" est en fait la somme des scores des films groupés par réalisateur,
+        # donc finalement le score de chaque réalisateur. On rename alors :
         list_sum_scores = list_sum_scores.rename(columns={'score_film': 'score_realisateur'})
         
         # On peut finalement faire une jointure avec la base df pour ajouter sur df la colonne du score du réalisateur :

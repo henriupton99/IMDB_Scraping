@@ -1,10 +1,10 @@
-# importation des modules requis ppur le codage des fonctions : 
-
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 import seaborn as sns
+import plotly.express as px
+
 
 ##############################################################################################################
 # Codage des différentes fonctions requises dans le notebook consacré à la visualisation des données
@@ -38,7 +38,63 @@ class split_method:
 class movies_viz:
     # CLASSE movie_viz : différentes fonctions requises dans le notebook consacré à la visualisation des données
     
+    @classmethod
+    def runtime_hist(cls, df):
+        # Fonction runtime_hist
+        # Prend en argument une base de données df
+        # Retourne un histogramme représentatif de la distribution du nombre de films en fonction de leur durée
+        
+        # Définition de la figure :
+        ax = df.runtime.hist(bins=100, grid=False, figsize = (10,7),)
+        
+        # 90 films font plus de 300 minutes, on ne les considère donc pas ici par souci de visibilité :
+        ax.set_xlim((0,300))
+        
+        # Set des labels et paramétrage pour les axes :
+        plt.xlabel('Durée (minutes)')
+        ax.xaxis.set_major_locator(ticker.MultipleLocator(25))
+        ax.xaxis.set_minor_locator(ticker.MultipleLocator(5)) 
+        plt.ylabel('Nombre de films')
+        
+        # Fixation du titre du graphique :
+        plt.title("Distribution du nombre de films en fonction de leur durée") 
+        
+        # Affichage visuel du graphique :
+        plt.show()
+
+
+    @classmethod
+    def plotly_barplot(cls,df):
+        fig = px.histogram(df, x='runtime')
+        fig.show()
+
     
+        
+        
+    @classmethod
+    def rank_year(cls,df):
+        # Fonction rank_year
+        # Prend en argument une base de données df
+        # Retourne une courbe représentative de l'évolution de la note moyenne des films par année
+        
+        # Définition de la taille de la figure :
+        sns.set(rc={'figure.figsize':(10,7)})
+        
+        # Génération du graphique d'intérêt :
+        sns.lineplot(x="year", # Evolution au fil des années
+                     y="rate", # de la note moyenne 
+                     data = df, # dans la base de données
+                    palette = "deep").set(xlabel = "Année", ylabel = "Notation") # classés par année, linechart des notes
+        
+        # Paramètre graphique de seaborn :
+        sns.despine(bottom = True)
+        
+        # Fixation du titre du graphique :
+        plt.title("Note moyenne des films par année, et intervalle à 95%", size=15)
+        
+        # Affichage visuel du graphique :
+        plt.show()
+
     
     @classmethod
     def genres_count(cls, df):
@@ -73,7 +129,6 @@ class movies_viz:
 
     
     
-    
     @classmethod
     def genres_boxplot(cls, df, list_genres):
         # Fonction genres_boxplot
@@ -106,62 +161,6 @@ class movies_viz:
         plt.title("Boîtes à moustaches représentatives de la distribution des notes des films groupés par genres", size=15)
         
         # Affichage visuel de la figure paramètrée :
-        plt.show()
-
-        
-        
-        
-
-    @classmethod
-    def runtime_hist(cls, df):
-        # Fonction runtime_hist
-        # Prend en argument une base de données df
-        # Retourne un histogramme représentatif de la distribution du nombre de films en fonction de leur durée
-        
-        # Définition de la figure :
-        ax = df.runtime.hist(bins=100, grid=False, figsize = (10,7),)
-        
-        # 90 films font plus de 300 minutes, on ne les considère donc pas ici par souci de visibilité :
-        ax.set_xlim((0,300))
-        
-        # Set des labels et paramétrage pour les axes :
-        plt.xlabel('Durée (minutes)')
-        ax.xaxis.set_major_locator(ticker.MultipleLocator(25))
-        ax.xaxis.set_minor_locator(ticker.MultipleLocator(5)) 
-        plt.ylabel('Nombre de films')
-        
-        # Fixation du titre du graphique :
-        plt.title("Distribution du nombre de films en fonction de leur durée") 
-        
-        # Affichage visuel du graphique :
-        plt.show()
-
-
-        
-        
-        
-    @classmethod
-    def rank_year(cls,df):
-        # Fonction rank_year
-        # Prend en argument une base de données df
-        # Retourne une courbe représentative de l'évolution de la note moyenne des films par année
-        
-        # Définition de la taille de la figure :
-        sns.set(rc={'figure.figsize':(10,7)})
-        
-        # Génération du graphique d'intérêt :
-        sns.lineplot(x="year", # Evolution au fil des années
-                     y="rate", # de la note moyenne 
-                     data = df, # dans la base de données
-                    palette = "deep").set(xlabel = "Année", ylabel = "Notation") # classés par année, linechart des notes
-        
-        # Paramètre graphique de seaborn :
-        sns.despine(bottom = True)
-        
-        # Fixation du titre du graphique :
-        plt.title("Note moyenne des films par année, et intervalle à 95%", size=15)
-        
-        # Affichage visuel du graphique :
         plt.show()
 
         
