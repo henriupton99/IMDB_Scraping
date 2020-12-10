@@ -156,7 +156,7 @@ class movies_viz:
         sns.boxplot(x="genres",
                     y="rate",
                     data = df_genres,
-                    palette = "deep").set(xlabel = "Genres", ylabel = "Notations") # palette de couleurs
+                    palette = "deep").set(xlabel = "Genres", ylabel = "Note moyenne") # palette de couleurs
         
         # Paramètre graphique :
         sns.despine(bottom = True)
@@ -181,6 +181,7 @@ class movies_viz:
             df (pandas.core.frame.DataFrame): dataframe nettoyée
         """
         
+            
         # Sous-base de df avec uniquement les variables d'intérêt
         df_corr = df[["year","runtime","rate","votes"]]
 
@@ -198,8 +199,10 @@ class movies_viz:
         with sns.axes_style("white"):
             plt.subplots(figsize=(7, 5))
             sns.heatmap(corr, mask=mask, cmap = cmap, annot=True, square=True)
-
-    
+        
+        plt.title('Matrice de correlation entre les différentes variables de la base', size = 15)
+        plt.show()
+        
     @classmethod
     def pairplot(cls,df):
         """Génère le pairplot seaborn

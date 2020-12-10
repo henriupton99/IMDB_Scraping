@@ -100,3 +100,19 @@ class preprocessing_data:
         return df
 
     
+    @classmethod
+    def add_score_casting(cls,df):
+        # Fonction add_score_casting
+        # Prend en argument une base de données df qui contient le score de chaque acteur
+        # Retourne df avec une colonne supplémentaire : le score du casting (la moyenne du score des acteurs)
+        
+        # On groupe par tconst (unique pour chaque film) et on fait la moyenne du score des acteurs par film :
+        df = df.groupby("tconst")["score_acteur"].mean().to_frame().reset_index()
+    
+        # On renomme la colonne score_acteur du resultat précédent qui est en fait désormais le score du casting :
+        df.rename(columns = {"score_acteur" : "score_casting"}, inplace = True) 
+        
+        
+        
+        return df
+        
