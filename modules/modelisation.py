@@ -13,8 +13,35 @@ import sklearn
 class preprocessing_data:
     # Différentes fonctions requises dans le notebook consacré à la prépartion des données
     
+    @classmethod
+    def one_hot_encoding(cls,df, list_genres) :
+        """Encode la variable genres en créant des colonnes binaires pour chaque film
+
+        Args:
+            df (pandas.core.frame.DataFrame): dataframe nettoyée
+
+        Returns:
+            list_genres (list): liste des genres de la base
+        """
+
+        list_columns = ["genre_" + genres for genres in list_genres] 
+
+        # Import de la base splitée par genres, déjà utilisée en visualisation
+        df_genres_split = pd.read_csv("./data/data_genres_split.csv", sep = "\t")
+
+        # Conversion en variable binaire, puis somme pour chaque film
+        df_genres_split = pd.concat([df_genres_split,pd.get_dummies(df_genres_split['genres'], prefix='genre')],axis=1)
+
+        df_one_hot = df_genres_split.groupby(["tconst"]).sum(list_columns)
+        df_one_hot.reset_index(level=0, inplace=True)
+
+        # Jointure avec la base initiale, seules les colonnes "genres_" sont ajoutées
+        df = pd.merge(df,df_one_hot[['tconst']+ list_columns], on = ["tconst"], how='left')
+
+        return df 
     
-    
+
+
     @classmethod
     def formule_score_film(cls, rank, rate, nb_votes):
         """Calcule le score d'un film
@@ -120,6 +147,9 @@ class preprocessing_data:
         
         # Jointure finale avec la base df pour y ajouter la colonne du score de l'acteur :
         df = pd.merge(df,list_sum_scores, on = ["casting"])
+
+        df.loc[df['casting'] == '', 'score_acteur'] = 0
+        df['score_acteur'].fillna(0, inplace=True)  
     
         return df
 
