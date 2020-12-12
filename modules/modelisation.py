@@ -32,7 +32,7 @@ class preprocessing_data:
         # Conversion en variable binaire, puis somme pour chaque film
         df_genres_split = pd.concat([df_genres_split,pd.get_dummies(df_genres_split['genres'], prefix='genre')],axis=1)
 
-        df_one_hot = df_genres_split.groupby(["tconst"]).sum(list_columns)
+        df_one_hot = df_genres_split.groupby(["tconst"]).sum()
         df_one_hot.reset_index(level=0, inplace=True)
 
         # Jointure avec la base initiale, seules les colonnes "genres_" sont ajoutées
@@ -173,4 +173,26 @@ class preprocessing_data:
         
         
         return df
+
+
+
+    @classmethod
+    def formation_base_finale(cls,df_genres, df_scores):
+        """Forme la base finale
+
+        Args:
+            df (pandas.core.frame.DataFrame): 
+        """
+
+        df_final = pd.merge(df_genres, df_scores[['tconst', "score_realisateur", "score_casting"]], on = ["tconst"], how='left')
+        
+        df_final.dropna(subset=['score_casting', 'score_realisateur'], inplace = True)
+
+        df_final.drop(columns=['tconst','title', 'genres', 'director', 'casting'], inplace = True)
+
+        return df_final
+
+
+
+
         
