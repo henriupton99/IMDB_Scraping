@@ -42,6 +42,48 @@ class split_method:
 class movies_viz:
    
     @classmethod
+    def fonction_repartition_rate(cls,df):
+        """Renvoie la fonction de répartition de la variable rate 
+
+        Args:
+            data (pandas.core.frame.DataFrame): dataframe nettoyée
+        """
+
+        sns.set_theme(style="whitegrid")
+        fig, ax = plt.subplots()
+        fig.set_size_inches(11.7, 8.27)
+        sns.ecdfplot(data = df, x= "rate") 
+        sns.despine()
+        plt.title("Figure 1 - Fonction de répartition de la variable de vote", size = 18)
+        plt.xlabel("Note du film", size = 15)
+        plt.ylabel("Proportion", size = 15)
+        plt.show()
+
+    @classmethod
+    def scatter_years_votes(cls,df):
+        """Renvoie le nuage de points du nombre de votes en fonction des années 
+
+        Args:
+            data (pandas.core.frame.DataFrame): dataframe nettoyée
+        """
+
+        temp = df
+        temp["after 1980"] = np.where(temp['year']>=1980, 'Yes', 'No')
+        sns.set_theme(style="whitegrid")
+        sns.relplot(
+            data=temp,
+            x="year", y="votes",
+            hue="after 1980"
+        )
+        sns.despine(bottom = True)
+        plt.title("Figure 3 - Nombre de votes des films avant et après 1980", size = 18)
+        plt.xlabel("Année de sortie", size = 15)
+        plt.ylabel("Nombre de votes", size = 15)
+        plt.show()
+
+
+
+    @classmethod
     def plotly_histo(cls,df, bins_size = 5):
         """Renvoie l'histogramme de la distribution de la durée des films 
 
@@ -77,23 +119,19 @@ class movies_viz:
         Args:
             df (pandas.core.frame.DataFrame): dataframe nettoyée
         """
-    
-        # Taille de la figure :
-        sns.set(rc={'figure.figsize':(10,7)})
-        
-        # Génération du graphique :
+        sns.set_theme(style="whitegrid")
+        fig, ax = plt.subplots()
+        fig.set_size_inches(11.7, 8.27)
         sns.lineplot(x="year",
                      y="rate", 
                      data = df,
                     palette = "deep").set(xlabel = "Année", ylabel = "Notation")
-        
-        # Paramètre graphique de seaborn :
         sns.despine(bottom = True)
-        
-        # Titre du graphique :
-        plt.title("Note moyenne des films par année, et intervalle à 95%", size=15)
-        
+        plt.title("Figure 6 - Note moyenne des films par année, et intervalle à 95%", size = 18)
+        plt.xlabel("Année", size = 15)
+        plt.ylabel("Note moyenne", size = 15)
         plt.show()
+    
 
     
     @classmethod
@@ -196,11 +234,15 @@ class movies_viz:
         cmap = sns.diverging_palette(230, 20, as_cmap=True)
 
         # Plot de la heatmap
-        with sns.axes_style("white"):
-            plt.subplots(figsize=(7, 5))
-            sns.heatmap(corr, mask=mask, cmap = cmap, annot=True, square=True)
         
-        plt.title('Matrice de correlation entre les différentes variables de la base', size = 15)
+        
+        sns.set_theme(style="whitegrid")
+        fig, ax = plt.subplots()
+        fig.set_size_inches(11.7, 8.27)
+        sns.heatmap(corr, mask=mask, cmap = cmap, annot=True, square=True)
+        sns.despine()
+            
+        plt.title('Figure 2 - Matrice de correlation entre les différentes variables de la base', size = 18)
         plt.show()
         
     @classmethod
