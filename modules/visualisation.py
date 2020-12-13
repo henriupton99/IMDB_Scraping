@@ -50,7 +50,7 @@ class movies_viz:
         """
 
         sns.set_theme(style="whitegrid")
-        fig, ax = plt.subplots()
+        fig, _ = plt.subplots()
         fig.set_size_inches(11.7, 8.27)
         sns.ecdfplot(data = df, x= "rate") 
         sns.despine()
@@ -76,7 +76,7 @@ class movies_viz:
             hue="after 1980"
         )
         sns.despine(bottom = True)
-        plt.title("Figure 3 - Nombre de votes des films avant et après 1980", size = 18)
+        plt.title("Figure 3 - Nombre de votes des films avant et après 1980", size = 16)
         plt.xlabel("Année de sortie", size = 15)
         plt.ylabel("Nombre de votes", size = 15)
         plt.show()
@@ -98,6 +98,9 @@ class movies_viz:
 
         # Esthétique
         fig.update_layout(height = 400,
+                                title = "Figure 4 - Distribution de la durée d'un film",
+                                title_font = {'size' : 19, 'family': 'Helvetica Neue'},
+                                title_x = 0.5,
                                 yaxis_title = "Nombre de films",
                                 yaxis_title_font = {'size' : 17, 'family': 'Helvetica Neue'},
                                 yaxis_tickfont = {'size': 14, 'family': 'Helvetica Neue'},
@@ -120,20 +123,44 @@ class movies_viz:
             df (pandas.core.frame.DataFrame): dataframe nettoyée
         """
         sns.set_theme(style="whitegrid")
-        fig, ax = plt.subplots()
+        fig, _ = plt.subplots()
         fig.set_size_inches(11.7, 8.27)
         sns.lineplot(x="year",
                      y="rate", 
                      data = df,
                     palette = "deep").set(xlabel = "Année", ylabel = "Notation")
         sns.despine(bottom = True)
-        plt.title("Figure 6 - Note moyenne des films par année, et intervalle à 95%", size = 18)
+        plt.title("Figure 5 - Note moyenne des films par année, et intervalle à 95%", size = 18)
         plt.xlabel("Année", size = 15)
         plt.ylabel("Note moyenne", size = 15)
         plt.show()
     
 
-    
+    @classmethod
+    def genres_count_bar(cls,df):
+        """Affiche le nombre d'occurences de chaque genres présent dans df
+
+        Args:
+            df (pandas.core.frame.DataFrame): dataframe splitée
+        """
+
+        temp = df.groupby("genres").count().reset_index().filter(["genres","index"])
+        temp = temp.rename(columns = {"genres":"Genre", "index":"Occurences"})
+        temp = temp.sort_values("Occurences", ascending = False)
+        
+        #Génération du graphique
+        sns.set_theme(style="whitegrid")
+        fig, _ = plt.subplots()
+        fig.set_size_inches(11.7, 8.27)
+        sns.barplot(x="Occurences", y="Genre", data = temp , orient = "h")
+        sns.despine(left = True, bottom = True)
+        plt.title("Figure 6 - Nombre d'occurences de chaque genre dans la base de données", size = 18)
+        plt.xlabel("Genre", size = 15)
+        plt.ylabel("Occurences", size = 15)
+        plt.show()
+
+
+
     @classmethod
     def genres_count(cls, df):
         """Affiche le nombre de genres présents dans la base df
@@ -203,7 +230,7 @@ class movies_viz:
         plt.ylim([0,10.1])
         
         # Titre au graphique
-        plt.title("Boîtes à moustaches représentatives de la distribution des notes des films groupés par genres", size=15)
+        plt.title("Figure 7 - Boîtes à moustaches représentatives de la distribution des notes des films groupés par genres", size=15)
         
         # Affichage
         plt.show()
@@ -237,7 +264,7 @@ class movies_viz:
         
         
         sns.set_theme(style="whitegrid")
-        fig, ax = plt.subplots()
+        fig, _ = plt.subplots()
         fig.set_size_inches(11.7, 8.27)
         sns.heatmap(corr, mask=mask, cmap = cmap, annot=True, square=True)
         sns.despine()
