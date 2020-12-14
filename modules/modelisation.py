@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 import seaborn as sns
-import sklearn 
+import sklearn
 
 ##############################################################################################################
 # Codage des différentes fonctions requises dans le notebook consacré à la modelisation 
@@ -55,7 +55,7 @@ class preprocessing_data:
             score (float): score d'un film selon la formule expliquée dans le notebook
         """
        
-        score = (1/(rank))*(rate**2)  # Nombre de votes non pris en compte pour l'instant 
+        score = (1/(rank))*(rate**2)*np.sqrt(nb_votes)  # Nombre de votes non pris en compte pour l'instant 
 
         return  score
 
